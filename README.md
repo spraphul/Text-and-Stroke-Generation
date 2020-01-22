@@ -7,7 +7,7 @@ Based on the research paper [Generating Sequences With Recurrent Neural Networks
 1. Mixed Density Network implementation(two normal and one bernoulli)
 2. Encoder Decoder LSTM Architecture 
 3. Attention Layer 
-4. Probabilitic Loss Function as discussed in the paper
+4. Probabilistic Loss Function as discussed in the paper
 
 
 #### Dataset Format:

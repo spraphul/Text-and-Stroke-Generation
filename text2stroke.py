@@ -307,24 +307,28 @@ def build_model():
     
     context_vectors = keras.layers.concatenate([cross_attention, alstm1])
     
-    mean1 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean1')(context_vectors)
-    mean2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean2')(context_vectors)
-    sigma1 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma1')(context_vectors)
-    sigma2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma2')(context_vectors)
+    mean = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='sigmoid'), name='mean1')(context_vectors)
+    #mean2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean2')(context_vectors)
+    sigma = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='exponential'), name='sigma1')(context_vectors)
+    #sigma2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma2')(context_vectors)
     rho = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='tanh'), name='rho')(context_vectors)
     pi = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='prob')(context_vectors)
-    output = keras.layers.concatenate([mean1, mean2, sigma1, sigma2, rho, pi])
+    output = keras.layers.concatenate([mean, sigma, rho, pi])
     model = Model([text_inp, stroke_inp], output)
     return model 
  
 
 x = []
 for i in strokes:
+    i[:,1] = (i[:,1]-min(i[:,1]))/(max(i[:,1])-min(i[:,1]))
+    i[:,2] = (i[:,2]-min(i[:,2]))/(max(i[:,2])-min(i[:,2]))
     x.append(i[0:-1].reshape( -1, 3))
     
 
 y = []
 for i in strokes:
+    i[:,1] = (i[:,1]-min(i[:,1]))/(max(i[:,1])-min(i[:,1]))
+    i[:,2] = (i[:,2]-min(i[:,2]))/(max(i[:,2])-min(i[:,2]))
     y.append(i[1:].reshape(1,-1,3))
     
 

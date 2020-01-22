@@ -281,6 +281,8 @@ def build_model():
 
 x = []
 for i in strokes:
+    i[:,1] = (i[:,1]-min(i[:,1]))/(max(i[:,1])-min(i[:,1]))
+    i[:,2] = (i[:,2]-min(i[:,2]))/(max(i[:,2])-min(i[:,2]))
     x.append(i[0:-1].reshape( -1, 3))
     
     

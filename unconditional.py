@@ -102,23 +102,27 @@ def build_model():
 
     lstm2 = keras.layers.LSTM(64, return_sequences=True)(alstm1)
 
-    mean1 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean1')(lstm2)
-    mean2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean2')(lstm2)
-    sigma1 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma1')(lstm2)
-    sigma2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma2')(lstm2)
+    mean = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='sigmoid'), name='mean1')(lstm2)
+    #mean2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='mean2')(lstm2)
+    sigma = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='exponential'), name='sigma1')(lstm2)
+    #sigma2 = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='exponential'), name='sigma2')(lstm2)
     rho = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='tanh'), name='rho')(lstm2)
     pi = keras.layers.TimeDistributed(keras.layers.Dense(1, activation='sigmoid'), name='prob')(lstm2)
-    output = keras.layers.concatenate([mean1, mean2, sigma1, sigma2, rho, pi])
+    output = keras.layers.concatenate([mean, sigma, rho, pi])
     model = Model(inp, output)
     return model 
     
 
 x = []
 for i in strokes:
+    i[:,1] = (i[:,1]-min(i[:,1]))/(max(i[:,1])-min(i[:,1]))
+    i[:,2] = (i[:,2]-min(i[:,2]))/(max(i[:,2])-min(i[:,2]))
     x.append(i[0:-1].reshape(1, -1, 3))
     
 y = []
 for i in strokes:
+    i[:,1] = (i[:,1]-min(i[:,1]))/(max(i[:,1])-min(i[:,1]))
+    i[:,2] = (i[:,2]-min(i[:,2]))/(max(i[:,2])-min(i[:,2]))
     y.append(i[1:].reshape(1,-1,3))
     
 
